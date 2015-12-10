@@ -34,25 +34,37 @@ describe('compute-ode-euler', function () {
 	it('throws an error if y0 is not array-like', function () {
 		assert.throws(function () {
 			euler( 'invalid', function() {}, 0, 0 );
-		});
+		}, /ode-euler/);
 	});
 
 	it('throws an error if deriv is not a function', function () {
 		assert.throws(function () {
 			euler( [1,2,3], 'invalid', 0, 0 );
-		});
+		}, /ode-euler/);
 	});
 
 	it('throws an error if t is not a Number', function () {
 		assert.throws(function () {
 			euler( [1,2,3], function() {}, 'invalid', 0 );
-		});
+		}, /ode-euler/);
 	});
 
 	it('throws an error if dt is not a Number', function () {
 		assert.throws(function () {
 			euler( [1,2,3], function() {}, 0, 'invalid' );
-		});
+		}, /ode-euler/);
+	});
+
+	it('throws an error if step count is not an integer', function () {
+		var integrator = euler( [1,2,3], function() { return [0, 0, 0]; }, 1, 0);
+
+		assert.doesNotThrow(function () {
+			integrator.steps(1)
+		})
+
+		assert.throws(function () {
+			integrator.steps(1.5)
+		}, /ode-euler/);
 	});
 });
 
