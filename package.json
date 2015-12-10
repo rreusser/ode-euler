@@ -1,6 +1,6 @@
 {
   "name": "compute-ode-euler",
-  "version": "0.0.0",
+  "version": "0.0.1",
   "description": "Integrate a system of ordinary differential equations using the explicit Euler method.",
   "author": {
     "name": "Ricky Reusser",
@@ -25,19 +25,29 @@
   "keywords": [
     "compute.io",
     "compute",
-    "computation"
+    "computation",
+    "integrate",
+    "calculus",
+    "euler",
+    "integral"
   ],
   "bugs": {
     "url": "https://github.com/compute-io/ode-euler/issues"
   },
-  "dependencies": {},
+  "dependencies": {
+    "validate.io-array": "^1.0.6",
+    "validate.io-function": "^1.0.2",
+    "validate.io-number": "^1.0.3",
+    "validate.io-typed-array": "^1.0.0"
+  },
   "devDependencies": {
     "chai": "3.x.x",
-    "mocha": "2.x.x",
     "coveralls": "^2.11.1",
     "istanbul": "^0.3.0",
     "jshint": "2.x.x",
-    "jshint-stylish": "2.x.x"
+    "jshint-stylish": "2.x.x",
+    "mocha": "2.x.x",
+    "richardson-extrapolation": "^1.0.3"
   },
   "license": "MIT"
 }
