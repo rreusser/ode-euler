@@ -1,6 +1,6 @@
 ode-euler
 ===
-[![NPM version][npm-image]][npm-url] [![Build Status][travis-image]][travis-url] [![Coverage Status][coveralls-image]][coveralls-url] [![Dependencies][dependencies-image]][dependencies-url]
+[![NPM version][npm-image]][npm-url] [![Build Status][travis-image]][travis-url] [![Coverage Status][codecov-image]][codecov-url] [![Dependencies][dependencies-image]][dependencies-url]
 
 > Integrate a system of ordinary differential equations using the explicit Euler method.
 
@@ -17,10 +17,10 @@ For use in the browser, use [browserify](https://github.com/substack/node-browse
 ## Usage
 
 ``` javascript
-var foo = require( 'compute-ode-euler' );
+var euler = require( 'compute-ode-euler' );
 ```
 
-#### foo( arr )
+#### euler( y0, deriv, t0, dt )
 
 What does this function do?
 
@@ -28,7 +28,25 @@ What does this function do?
 ## Examples
 
 ``` javascript
-var foo = require( 'compute-ode-euler' );
+var euler = require( 'compute-ode-euler' );
+
+var deriv = function(dydt, y, t) {
+	dydt[ 0 ] = -y[ 1 ];
+	dydt[ 1 ] =  y[ 0 ];
+}
+
+var y0 = [1,0];
+var n = 1000;
+var t0 = 0;
+var dt = 2.0 * Math.PI / n;
+
+var integrator = euler( y0, deriv, t0, dt );
+
+// Integrate 1000 steps:
+integrator.steps( n );
+
+// Integrate all the way around a circle:
+// => integrator.y = [ 1.0199349143076457, -0.00008432969374211775 ]
 ```
 
 To run the example code from the top-level application directory,
@@ -83,8 +101,8 @@ Copyright &copy; 2015. The [Compute.io](https://github.com/compute-io) Authors.
 [travis-image]: http://img.shields.io/travis/compute-io/ode-euler/master.svg
 [travis-url]: https://travis-ci.org/compute-io/ode-euler
 
-[coveralls-image]: https://img.shields.io/coveralls/compute-io/ode-euler/master.svg
-[coveralls-url]: https://coveralls.io/r/compute-io/ode-euler?branch=master
+[codecov-image]: https://img.shields.io/codecov/c/github/compute-io/ode-euler/master.svg
+[codecov-url]: https://codecov.io/github/compute-io/ode-euler?branch=master
 
 [dependencies-image]: http://img.shields.io/david/compute-io/ode-euler.svg
 [dependencies-url]: https://david-dm.org/compute-io/ode-euler
