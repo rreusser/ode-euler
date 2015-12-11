@@ -3,14 +3,9 @@
 
 // MODULES //
 
-var // Expectation library:
-	chai = require( 'chai' ),
-
-	// Module to be tested:
+var chai = require( 'chai' ),
 	euler = require( './../lib' ),
-
-	// For validating convergence properties:
-	richardson = require('richardson-extrapolation');
+	richardson = require( 'richardson-extrapolation' );
 
 
 // VARIABLES //
@@ -23,57 +18,57 @@ var expect = chai.expect,
 		'Array': function(){ return arguments[0]; }
 	};
 
+
 // TESTS //
 
-
-describe('compute-ode-euler', function () {
-	it('exports a function', function () {
+describe( 'compute-ode-euler', function tests() {
+	it( 'exports a function', function test() {
 		expect( euler ).to.be.a( 'function' );
 	});
 
-	it('throws an error if y0 is not array-like', function () {
-		assert.throws(function () {
+	it( 'throws an error if y0 is not array-like', function test() {
+		assert.throws( function () {
 			euler( 'invalid', function() {}, 0, 0 );
-		}, /ode-euler/);
+		});
 	});
 
-	it('throws an error if deriv is not a function', function () {
-		assert.throws(function () {
+	it( 'throws an error if deriv is not a function', function test() {
+		assert.throws( function () {
 			euler( [1,2,3], 'invalid', 0, 0 );
-		}, /ode-euler/);
+		});
 	});
 
-	it('throws an error if t is not a Number', function () {
-		assert.throws(function () {
+	it( 'throws an error if t is not a Number', function test() {
+		assert.throws( function () {
 			euler( [1,2,3], function() {}, 'invalid', 0 );
-		}, /ode-euler/);
+		});
 	});
 
-	it('throws an error if dt is not a Number', function () {
-		assert.throws(function () {
+	it(' throws an error if dt is not a Number', function test() {
+		assert.throws( function () {
 			euler( [1,2,3], function() {}, 0, 'invalid' );
-		}, /ode-euler/);
+		});
 	});
 
-	it('throws an error if step count is not an integer', function () {
-		var integrator = euler( [1,2,3], function() { return [0, 0, 0]; }, 1, 0);
+	it( 'throws an error if step count is not an integer', function test() {
+		var integrator = euler( [1,2,3], function() { return [0, 0, 0]; }, 1, 0 );
 
 		assert.doesNotThrow(function () {
-			integrator.steps(1)
-		})
+			integrator.steps( 1 );
+		});
 
-		assert.throws(function () {
-			integrator.steps(1.5)
-		}, /ode-euler/);
+		assert.throws( function () {
+			integrator.steps( 1.5 );
+		});
 	});
 });
 
-Object.keys(ctors).forEach(function(dtype) {
+Object.keys( ctors ).forEach( function( dtype ) {
 	var Ctor = ctors[dtype];
 
-	describe('compute-ode-euler (' + dtype + ')', function() {
+	describe( 'compute-ode-euler (' + dtype + ')', function tests() {
 
-		describe('integration of one variable', function() {
+		describe( 'integration of one variable', function test() {
 			var integrator, f, y0, t0, n;
 
 			beforeEach(function() {
@@ -85,22 +80,21 @@ Object.keys(ctors).forEach(function(dtype) {
 				integrator = euler( y0, f, t0, 1/n );
 			});
 
-			it('creates work arrays of the same type as the input',function() {
+			it( 'creates work arrays of the same type as the input', function test() {
 				assert.equal( integrator._yp.constructor, y0.constructor );
 			});
 
-			it('creates work arrays of the same length as the input',function() {
+			it( 'creates work arrays of the same length as the input', function test() {
 				assert.equal( integrator._yp.length, y0.length );
 			});
 
-			it('takes multiple timesteps',function() {
+			it( 'takes multiple timesteps', function test() {
 				integrator.steps(n);
 				assert.closeTo(integrator.y[0], Math.exp(-1), 1e-2 );
 			});
 		});
 
-
-		describe('integration of two variables', function() {
+		describe( 'integration of two variables', function tests() {
 			var integrator, f, y0, t0;
 
 			beforeEach(function() {
@@ -115,29 +109,29 @@ Object.keys(ctors).forEach(function(dtype) {
 				integrator = euler( y0, f, t0, 1 );
 			});
 
-			it('creates work arrays of the same type as the input',function() {
+			it( 'creates work arrays of the same type as the input', function test() {
 				assert.equal( integrator._yp.constructor, y0.constructor );
 			});
 
-			it('creates work arrays of the same length as the input',function() {
+			it( 'creates work arrays of the same length as the input', function test() {
 				assert.equal( integrator._yp.length, y0.length );
 			});
 
 
-			it('takes a single timestep',function() {
+			it( 'takes a single timestep', function test() {
 				integrator.step();
 				assert.closeTo( integrator.y[0], 1, 1e-4 );
 				assert.closeTo( integrator.y[1], 1, 1e-4 );
 			});
 
-			it('increments the time',function() {
+			it( 'increments the time', function test() {
 				integrator.step();
 				assert.closeTo( integrator.t, t0 + integrator.dt, 1e-4 );
 				integrator.step();
 				assert.closeTo( integrator.t, t0 + 2*integrator.dt, 1e-4 );
 			});
 
-			it('takes multiple timesteps',function() {
+			it( 'takes multiple timesteps', function test() {
 				integrator.steps(2);
 				assert.closeTo(integrator.y[0], 0, 1e-4 );
 				assert.closeTo(integrator.y[1], 2, 1e-4);
@@ -145,12 +139,10 @@ Object.keys(ctors).forEach(function(dtype) {
 
 		});
 
-		describe('euler integration with binding of extra data (' + dtype + ')', function() {
-
+		describe( 'euler integration with binding of extra data (' + dtype + ')', function tests() {
 			var integrator, f, y0;
 
-			beforeEach(function() {
-
+			beforeEach( function() {
 				var data = {
 					scale: 2
 				};
@@ -165,23 +157,22 @@ Object.keys(ctors).forEach(function(dtype) {
 				integrator = euler( y0, f, 0, 1 );
 			});
 
-			it('takes a single timestep',function() {
+			it( 'takes a single timestep', function test() {
 				integrator.step();
 				assert.closeTo( integrator.y[0], 1, 1e-4 );
 				assert.closeTo( integrator.y[1], 2, 1e-4 );
 			});
 
-			it('takes multiple timesteps',function() {
+			it( 'takes multiple timesteps', function test() {
 				integrator.steps(2);
 				assert.closeTo(integrator.y[0], -3, 1e-4 );
 				assert.closeTo(integrator.y[1], 4, 1e-4);
 			});
-
 		});
 
-		describe('convergence', function() {
+		describe( 'convergence', function tests() {
 
-			it('local truncation error is ~ O(h^2) in time', function() {
+			it( 'local truncation error is ~ O(h^2) in time', function test() {
 				// Integrate an exponential: dy/dt = -y --> y = exp(-t)
 				var result = richardson(function(h) {
 					var f = function(dydt, y) { dydt[0] = -y[0]; };
@@ -191,8 +182,7 @@ Object.keys(ctors).forEach(function(dtype) {
 				assert.closeTo( result.n, 2, 1e-2, 'n ~ 2' );
 			});
 
-
-			it('local truncation error is order O(h^2)', function() {
+			it( 'local truncation error is order O(h^2)', function test() {
 				var result = richardson(function(h) {
 
 					// Integrate along a sector of a circle:
@@ -207,7 +197,7 @@ Object.keys(ctors).forEach(function(dtype) {
 				assert.closeTo( result.n, 2, 1e-2, 'n ~ 2' );
 			});
 
-			it('total accumulated error is order O(h^1)', function() {
+			it( 'total accumulated error is order O(h^1)', function test() {
 
 				var result = richardson(function(h) {
 
@@ -223,9 +213,9 @@ Object.keys(ctors).forEach(function(dtype) {
 				assert.closeTo( result.n, 1, 1e-1, 'n ~ 1' );
 			});
 
-			it('total accumulated error is order O(h^1) in all variables', function() {
+			it( 'total accumulated error is order O(h^1) in all variables', function test() {
 
-				var result = richardson(function(h) {
+				var result = richardson( function( h ) {
 					// Integrate around a circle at an accelerating rate
 					var f = function(dydt, y, t) {
 						var s = Math.sin(t * Math.PI) * Math.PI / 2;
@@ -241,9 +231,6 @@ Object.keys(ctors).forEach(function(dtype) {
 
 				assert.closeTo( result.n, 1, 1e-2, 'n ~ 1' );
 			});
-
 		});
-
 	});
-
 });
